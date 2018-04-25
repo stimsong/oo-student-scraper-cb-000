@@ -7,15 +7,6 @@ require_relative './student.rb'
 class Scraper
   # attr_accessor :name, :location, :profile_url
 
-  def self.profile_url(doc)
-    url = nil
-    # cards = []
-    doc.css('.student-card a') do |card|
-      url = card.css("#{card['href']}")
-    end
-    url
-  end
-
   def self.scrape_index_page(index_url)
     doc = Nokogiri::HTML(open(index_url))
 
