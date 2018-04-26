@@ -4,8 +4,14 @@ class Student
 
   @@all = []
 
-  def initialize#(student_hash)  commented out by GRS
-
+  def initialize(student_hash)
+    student_hash.each do |attribute, value|
+      self.send("#{attribute}=", value)
+    end
+    # @name = student_hash[:name]
+    # @location = student_hash[:location]
+    @@all << self
+    binding.pry
   end
 
   def self.create_from_collection(students_array)
