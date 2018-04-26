@@ -5,12 +5,6 @@ require 'pry'
 require_relative './student.rb'
 
 class Scraper
-  # attr_accessor :name, :location, :profile_url, :students
-
-  # @@students = []
-  # def initialize
-  #   @students = []
-  # end
 
   def self.scrape_index_page(index_url)
     students = []
@@ -22,9 +16,9 @@ class Scraper
       temp_hash[:location] = card.css(".student-location").text
       temp_hash[:profile_url] = "#{card.attr('href')}"
       students << temp_hash
-      # binding.pry
     end
     students
+
     ###   :name = "Name"
     ###  student[name]
 
@@ -34,7 +28,7 @@ class Scraper
     ### ]
     ### temp_hash[:name] = "Greg"
     ### students << temp_hash
-# binding.pry
+
   end
 
   # def self.scrape_index_page(index_url)
@@ -51,7 +45,26 @@ class Scraper
   # end
 
   def self.scrape_profile_page(profile_url)
+    profile = Nokogiri::HTML(open(profile_url))
+    student_profile = {}
 
+    links = profile.css(".social-icon-container").children.css("a").map { |e| e.attribute('href').value}
+    links.each do |link|
+      if link.include?("linkedin")
+        student_profile[:linkedin] = link
+      elsif link.include?("github")
+        student_profile[:github] = link
+      elsif link.include?("twitter")
+        student_profile[:twitter] = link
+      else
+        student_profile[:blog] = link
+      end
+    end
+
+    student_profile[:profile_quote] = profile.css(".vitals-text-container .profile-quote").text
+    student_profile[:bio] = profile.css(".bio-block .description-holder p").text
+# binding.pry
+  student_profile
   end
 end
 
